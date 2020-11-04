@@ -634,9 +634,16 @@ static inline float doDropout(const network* net, const float f, const uint type
         if(uRandFloat(0, 1) <= net->dropout)
         {
             if(net->activator == SELU)
+            {
                 return -1.75809934085;
+            }
             else
-                return 0;
+            {
+                if(net->dropout_decay != 0)
+                    return f * (1.0 - net->dropout_decay);
+                else
+                    return 0;
+            }
         }
     }
     else if(type == 1)
@@ -647,9 +654,16 @@ static inline float doDropout(const network* net, const float f, const uint type
         if(uRandFloat(0, 1) <= net->wdropout)
         {
             if(net->activator == SELU)
+            {
                 return -1.75809934085;
+            }
             else
-                return 0;
+            {
+                if(net->dropout_decay != 0)
+                    return f * (1.0 - net->dropout_decay);
+                else
+                    return 0;
+            }
         }
     }
     return f;
