@@ -535,7 +535,7 @@ static inline float lecun_tanhDerivative(const float x)
     // against the proposed solution;
     // 1.14393 * pow(1 / cosh(x * 0.666667), 2)
     // is; 0.0000011390194490 at x = 0
-    // Alternate from suggested by Wolfram:
+    // Alternate form as suggested by Wolfram:
     // -0.388522 * (-1.7159 + x) * (1.7159 + x);
     const float sx = x * 0.62331494;
     return 1.1439288854598999023-(sx*sx);
