@@ -432,8 +432,7 @@ static inline float gelu(const float x)
 static inline float geluDerivative(const float x)
 {
     if(x <= 0){return -0.0000000000000000002;} else if (x >= 6.52){return 1;}
-    const float fi = 0.133333333 * x;
-    const uint i = 154.0 * fi;
+    const uint i = (uint)(154.0 * (0.133333333 * x));
     const float fx = x - floor(x);
     return gelu_table[i] * (1.f - fx) + gelu_table[i+1] * fx;
 }
