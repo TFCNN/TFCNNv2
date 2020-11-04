@@ -488,7 +488,7 @@ void bestSetting(const float min)
 
     uint oc[5] = {0};
     uint ic[8] = {0};
-    uint ac[12] = {0};
+    uint ac[13] = {0};
 
     // find a new lowest fv target
     while(1)
@@ -578,7 +578,7 @@ void bestSetting(const float min)
                 fprintf(f, "Optimiser-%u: %u\n", i, oc[i]);
             for(uint i = 0; i < 8; i++)
                 fprintf(f, "Weight Init-%u: %u\n", i, ic[i]);
-            for(uint i = 0; i < 12; i++)
+            for(uint i = 0; i < 13; i++)
                 fprintf(f, "Activator-%u: %u\n", i, ac[i]);
             fprintf(f, "\n");
 
