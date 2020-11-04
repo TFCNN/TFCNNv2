@@ -83,7 +83,11 @@ enum
     ELLIOT      = 9, // aka softsign
     SOFTPLUS    = 10,
     GELU        = 11,
-    SELU        = 12
+    SELU        = 12,
+    BENT        = 13,
+    GAUSSIAN    = 14,
+    SINUSOID    = 15,
+    SINC        = 16
 }
 typedef activator;
 
