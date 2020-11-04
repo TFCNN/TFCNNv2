@@ -139,7 +139,11 @@ enum
     ELLIOT      = 9,
     SOFTPLUS    = 10,
     GELU        = 11,
-    SELU        = 12
+    SELU        = 12,
+    BENT        = 13,
+    GAUSSIAN    = 14,
+    SINUSOID    = 15,
+    SINC        = 16
 }
 typedef activator;
 
@@ -461,6 +465,56 @@ static inline float seluDerivative(const float x)
 
 /**********************************************/
 
+static inline float bent(const network* net, const float x)
+{
+    return ((sqrt(x*x + 1)-1) * 0.5) + x;
+}
+
+static inline float bentDerivative(const network* net, const float x)
+{
+    return (x / (2 * sqrt(x*x + 1))) + 1;
+}
+
+/**********************************************/
+
+static inline float gauss(const network* net, const float x)
+{
+    return exp(-x*-x);
+}
+
+static inline float gaussDerivative(const network* net, const float x)
+{
+    return -2 * x * exp(-x*-x);
+}
+
+/**********************************************/
+
+static inline float sinusoid(const network* net, const float x)
+{
+    return sin(x);
+}
+
+static inline float sinusoidDerivative(const network* net, const float x)
+{
+    return cos(x);
+}
+
+/**********************************************/
+
+static inline float sinc(const network* net, const float x)
+{
+    if(x == 0){return 1;}
+    return sin(x) / x;
+}
+
+static inline float sincDerivative(const network* net, const float x)
+{
+    if(x == 0){return 0;}
+    return (cos(x) / x) - (sin(x) / (x*x));
+}
+
+/**********************************************/
+
 static inline float leaky_relu(const network* net, const float x)
 {
     if(x < 0){return x * net->elualpha;}
@@ -577,6 +631,14 @@ static inline float Derivative(const float x, const network* net)
         return geluDerivative(x);
     else if(net->activator == 12)
         return seluDerivative(x);
+    else if(net->activator == 13)
+        return bentDerivative(x);
+    else if(net->activator == 14)
+        return gaussDerivative(x);
+    else if(net->activator == 15)
+        return sinusoidDerivative(x);
+    else if(net->activator == 16)
+        return sincDerivative(x);
     
     return reluDerivative(x); // same as identity derivative
 }
@@ -607,6 +669,14 @@ static inline float Activator(const float x, const network* net)
         return gelu(x);
     else if(net->activator == 12)
         return selu(x);
+    else if(net->activator == 13)
+        return bent(x);
+    else if(net->activator == 14)
+        return gauss(x);
+    else if(net->activator == 15)
+        return sinusoid(x);
+    else if(net->activator == 16)
+        return sinc(x);
 
     return x;
 }
@@ -872,7 +942,7 @@ void randomHyperparameters(network* net)
     if(net == NULL){return;}
         
     net->init       = uRand(0, 7);
-    net->activator  = uRand(0, 12);
+    net->activator  = uRand(0, 16);
     net->optimiser  = uRand(0, 4);
     net->rate       = uRandFloat(0.001, 0.1);
     net->dropout    = uRandFloat(0, 0.99);
