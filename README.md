@@ -80,9 +80,9 @@ enum
     SIGMOID     = 6,
     SWISH       = 7,
     LECUN       = 8,
-    ELLIOT      = 9, // aka softsign
+    ELLIOT      = 9,  // aka softsign
     SOFTPLUS    = 10,
-    GELU        = 11,
+    GELU        = 11, // not the best derivative
     SELU        = 12,
     BENT        = 13,
     GAUSSIAN    = 14,
