@@ -31,11 +31,13 @@ void setTargetMax(network* net, const float f);
 void randomHyperparameters(network* net);
 
 // quick randoms
+float qRandNormal();
 float qRandFloat(const float min, const float max);
 float qRandWeight(const float min, const float max);
 uint  qRand(const uint min, const uint umax);
 
 // slower randoms with higher entropy [make sure FAST_PREDICTABLE_MODE is undefined]
+float uRandNormal();
 float uRandFloat(const float min, const float max);
 float uRandWeight(const float min, const float max);
 uint  uRand(const uint min, const uint umax);
