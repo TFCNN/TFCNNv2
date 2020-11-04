@@ -70,6 +70,10 @@ struct
     float** output;
     float foutput;
     float error;
+    float drop_a;
+    float drop_b;
+    float drop_wa;
+    float drop_wb;
 }
 typedef network;
 
@@ -681,7 +685,7 @@ static inline float doDropout(const network* net, const float f, const uint type
         {
             if(net->activator == SELU)
             {
-                return -1.75809934085;
+                return f * net->drop_a + net->drop_b;
             }
             else
             {
@@ -701,7 +705,7 @@ static inline float doDropout(const network* net, const float f, const uint type
         {
             if(net->activator == SELU)
             {
-                return -1.75809934085;
+                return f * net->drop_wa + net->drop_wb;
             }
             else
             {
@@ -801,12 +805,20 @@ void setUnitDropout(network* net, const float f)
 {
     if(net == NULL){return;}
     net->dropout = f;
+
+    const float d1 = 1 - net->dropout;
+    net->drop_a = pow(net->dropout + 3.090895504 * net->dropout * d1, -0.5);
+    net->drop_b = -net->drop_a * (d1 * -1.758094282);
 }
 
 void setWeightDropout(network* net, const float f)
 {
     if(net == NULL){return;}
     net->wdropout = f;
+
+    const float d1 = 1 - net->wdropout;
+    net->drop_wa = pow(net->wdropout + 3.090895504 * net->wdropout * d1, -0.5);
+    net->drop_wb = -net->drop_wa * (d1 * -1.758094282);
 }
 
 void setDropoutDecay(network* net, const float f)
@@ -910,6 +922,13 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
     net->cbatches   = 0;
     net->error      = 0;
     net->foutput    = 0;
+
+    float d1 = 1 - net->dropout;
+    net->drop_a = pow(net->dropout + 3.090895504 * net->dropout * d1, -0.5);
+    net->drop_b = -net->drop_a * (d1 * -1.758094282);
+    d1 = 1 - net->wdropout;
+    net->drop_wa = pow(net->wdropout + 3.090895504 * net->wdropout * d1, -0.5);
+    net->drop_wb = -net->drop_wa * (d1 * -1.758094282);
     
     // create layers
     net->output = malloc((layers-1) * sizeof(float*));
