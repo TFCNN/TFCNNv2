@@ -134,7 +134,8 @@ enum
     LECUN       = 8,
     ELLIOT      = 9,
     SOFTPLUS    = 10,
-    GELU        = 11
+    GELU        = 11,
+    SELU        = 12
 }
 typedef activator;
 
@@ -394,6 +395,24 @@ static inline float geluDerivative(const float x)
 
 /**********************************************/
 
+static inline float selu(const float x)
+{
+    if(x < 0)
+        return 1.0507 * (1.67326 * exp(x) - 1.67326);
+
+    return 1.0507 * x;
+}
+
+static inline float seluDerivative(const float x)
+{
+    if(x < 0)
+        return 1.0507 * (1.67326 * exp(x));
+
+    return 1.0507;
+}
+
+/**********************************************/
+
 static inline float leaky_relu(const network* net, const float x)
 {
     if(x < 0){return x * net->elualpha;}
@@ -512,6 +531,8 @@ static inline float Derivative(const float x, const network* net)
         return sigmoid(x); // this is the derivative of softplus
     else if(net->activator == 11)
         return geluDerivative(x);
+    else if(net->activator == 12)
+        return seluDerivative(x);
     
     return reluDerivative(x); // same as identity derivative
 }
@@ -540,6 +561,8 @@ static inline float Activator(const float x, const network* net)
         return softplus(x);
     else if(net->activator == 11)
         return gelu(x);
+    else if(net->activator == 12)
+        return selu(x);
 
     return x;
 }
@@ -609,6 +632,37 @@ static inline float doPerceptron(const float* in, ptron* p)
     ro += p->bias;
 
     return ro;
+}
+
+static inline float doDropout(const network* net, const float f, const uint type)
+{
+    if(type == 0)
+    {
+        if(net->dropout == 0)
+            return f;
+
+        if(uRandFloat(0, 1) <= net->dropout)
+        {
+            if(net->activator == SELU)
+                return -1.75809934085;
+            else
+                return 0;
+        }
+    }
+    else if(type == 1)
+    {
+        if(net->wdropout == 0)
+            return f;
+
+        if(uRandFloat(0, 1) <= net->wdropout)
+        {
+            if(net->activator == SELU)
+                return -1.75809934085;
+            else
+                return 0;
+        }
+    }
+    return f;
 }
 
 /**********************************************/
@@ -752,7 +806,7 @@ void randomHyperparameters(network* net)
     if(net == NULL){return;}
         
     net->init       = uRand(0, 7);
-    net->activator  = uRand(0, 11);
+    net->activator  = uRand(0, 12);
     net->optimiser  = uRand(0, 4);
     net->rate       = uRandFloat(0.001, 0.1);
     net->dropout    = uRandFloat(0, 0.99);
@@ -998,29 +1052,10 @@ float processNetwork(network* net, float* inputs, const learn_type learn)
     // update input layer weights
     for(int j = 0; j < net->num_layerunits; j++)
     {
-        float decay = 1;
-        if(net->dropout != 0 && uRandFloat(0, 1) <= net->dropout)
-        {
-            if(net->dropout_decay == 0)
-                continue;
-            else
-                decay = (1-net->dropout_decay);
-        }
-
         for(int k = 0; k < net->layer[0][j].weights; k++)
-        {
-            if(net->wdropout != 0 && uRandFloat(0, 1) <= net->wdropout)
-            {
-                if(net->dropout_decay == 0)
-                    continue;
-                else
-                    decay = (1-net->dropout_decay);
-            }
+            net->layer[0][j].data[k] += doDropout(net, Optimiser(net, inputs[k], ef[0][j], &net->layer[0][j].momentum[k]), 1);
 
-            net->layer[0][j].data[k] += Optimiser(net, inputs[k], ef[0][j], &net->layer[0][j].momentum[k]) * decay;
-        }
-
-        net->layer[0][j].bias += Optimiser(net, 1, ef[0][j], &net->layer[0][j].bias_momentum) * decay;
+        net->layer[0][j].bias += doDropout(net, Optimiser(net, 1, ef[0][j], &net->layer[0][j].bias_momentum), 0);
     }
 
     // update hidden layer weights
@@ -1028,46 +1063,16 @@ float processNetwork(network* net, float* inputs, const learn_type learn)
     {
         for(int j = 0; j < net->num_layerunits; j++)
         {
-            float decay = 1;
-            if(net->dropout != 0 && uRandFloat(0, 1) <= net->dropout)
-            {
-                if(net->dropout_decay == 0)
-                    continue;
-                else
-                    decay = (1-net->dropout_decay);
-            }
-
             for(int k = 0; k < net->layer[i][j].weights; k++)
-            {
-                if(net->wdropout != 0 && uRandFloat(0, 1) <= net->wdropout)
-                {
-                    if(net->dropout_decay == 0)
-                        continue;
-                    else
-                        decay = (1-net->dropout_decay);
-                }
+                net->layer[i][j].data[k] += doDropout(net, Optimiser(net, net->output[i-1][j], ef[i][j], &net->layer[i][j].momentum[k]), 1);
 
-                net->layer[i][j].data[k] += Optimiser(net, net->output[i-1][j], ef[i][j], &net->layer[i][j].momentum[k]) * decay;
-            }
-
-            net->layer[i][j].bias += Optimiser(net, 1, ef[i][j], &net->layer[i][j].bias_momentum) * decay;
+            net->layer[i][j].bias += doDropout(net, Optimiser(net, 1, ef[i][j], &net->layer[i][j].bias_momentum), 0);
         }
     }
 
     // update output layer weights
     for(int j = 0; j < net->layer[net->num_layers-1][0].weights; j++)
-    {
-        float decay = 1;
-        if(net->wdropout != 0 && uRandFloat(0, 1) <= net->wdropout)
-        {
-            if(net->dropout_decay == 0)
-                continue;
-            else
-                decay = (1-net->dropout_decay);
-        }
-        
-        net->layer[net->num_layers-1][0].data[j] += Optimiser(net, net->output[net->num_layers-2][j], eout, &net->layer[net->num_layers-1][0].momentum[j]) * decay;
-    }
+        net->layer[net->num_layers-1][0].data[j] += doDropout(net, Optimiser(net, net->output[net->num_layers-2][j], eout, &net->layer[net->num_layers-1][0].momentum[j]), 1);
 
     net->layer[net->num_layers-1][0].bias += Optimiser(net, 1, eout, &net->layer[net->num_layers-1][0].bias_momentum);
 
