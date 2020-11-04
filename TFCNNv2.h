@@ -325,6 +325,51 @@ uint uRand(const uint min, const uint umax)
 #endif
 }
 
+float qRandNormal() // Box Muller
+{
+#ifndef FAST_PREDICTABLE_MODE
+    static time_t ls = 0;
+    if(time(0) > ls)
+    {
+        srand(time(0));
+        ls = time(0) + 33;
+    }
+#endif
+    double u = ((float)rand() / (float)RAND_MAX) * 2 - 1;
+    double v = ((float)rand() / (float)RAND_MAX) * 2 - 1;
+    double r = u * u + v * v;
+    while(r == 0 || r > 1)
+    {
+        u = ((float)rand() / (float)RAND_MAX) * 2 - 1;
+        v = ((float)rand() / (float)RAND_MAX) * 2 - 1;
+        r = u * u + v * v;
+    }
+    return u * sqrt(-2 * log(r) / r);
+}
+
+float uRandNormal()
+{
+#ifdef FAST_PREDICTABLE_MODE
+    return qRandNormal();
+#else
+    int f = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
+    uint s = 0;
+    ssize_t result = read(f, &s, 4);
+    srand(s);
+    close(f);
+    double u = ((float)rand() / (float)RAND_MAX) * 2 - 1;
+    double v = ((float)rand() / (float)RAND_MAX) * 2 - 1;
+    double r = u * u + v * v;
+    while(r == 0 || r > 1)
+    {
+        u = ((float)rand() / (float)RAND_MAX) * 2 - 1;
+        v = ((float)rand() / (float)RAND_MAX) * 2 - 1;
+        r = u * u + v * v;
+    }
+    return u * sqrt(-2 * log(r) / r);
+#endif
+}
+
 void newSRAND()
 {
     struct timespec c;
@@ -686,9 +731,9 @@ int createPerceptron(ptron* p, const uint weights, const float d, const weight_i
     for(uint i = 0; i < p->weights; i++)
     {
         if(wit < 4)
-            p->data[i] = qRandWeight(-d, d); // uniform
+            p->data[i] = qRandWeight(-1, 1) * d; // uniform
         else
-            p->data[i] = qRandWeight(0, d);  // normal
+            p->data[i] = qRandNormal() * d; // normal
 
         p->momentum[i] = 0;
     }
@@ -704,9 +749,9 @@ void resetPerceptron(ptron* p, const float d, const weight_init_type wit)
     for(uint i = 0; i < p->weights; i++)
     {
         if(wit < 4)
-            p->data[i] = qRandWeight(-d, d); // uniform
+            p->data[i] = qRandWeight(-1, 1) * d; // uniform
         else
-            p->data[i] = qRandWeight(0, d);  // normal
+            p->data[i] = qRandNormal() * d; // normal
         
         p->momentum[i] = 0;
     }
