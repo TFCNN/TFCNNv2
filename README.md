@@ -79,7 +79,8 @@ enum
     SWISH       = 7,
     LECUN       = 8,
     ELLIOT      = 9, // aka softsign
-    SOFTPLUS    = 10
+    SOFTPLUS    = 10,
+    GELU        = 11
 }
 typedef activator;
 
