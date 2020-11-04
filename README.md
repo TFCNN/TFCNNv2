@@ -80,7 +80,8 @@ enum
     LECUN       = 8,
     ELLIOT      = 9, // aka softsign
     SOFTPLUS    = 10,
-    GELU        = 11
+    GELU        = 11,
+    SELU        = 12
 }
 typedef activator;
 
