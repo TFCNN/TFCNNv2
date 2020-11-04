@@ -21,7 +21,7 @@ void setLearningRate(network* net, const float f);
 void setGain(network* net, const float f);
 void setUnitDropout(network* net, const float f); //Dropout
 void setWeightDropout(network* net, const float f); //Drop Connect
-void setDropoutDecay(network* net, const float f); //Dropout now silences the unit activation by decay rather than on/off
+void setDropoutDecay(network* net, const float f); //Set sropout to silence the unit activation by decay rather than on/off
 void setMomentum(network* net, const float f); //SGDM & NAG
 void setRMSAlpha(network* net, const float f);
 void setELUAlpha(network* net, const float f); //ELU & LeakyReLU
