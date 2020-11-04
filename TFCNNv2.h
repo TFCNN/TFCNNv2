@@ -465,49 +465,49 @@ static inline float seluDerivative(const float x)
 
 /**********************************************/
 
-static inline float bent(const network* net, const float x)
+static inline float bent(const float x)
 {
     return ((sqrt(x*x + 1)-1) * 0.5) + x;
 }
 
-static inline float bentDerivative(const network* net, const float x)
+static inline float bentDerivative(const float x)
 {
     return (x / (2 * sqrt(x*x + 1))) + 1;
 }
 
 /**********************************************/
 
-static inline float gauss(const network* net, const float x)
+static inline float gauss(const float x)
 {
     return exp(-x*-x);
 }
 
-static inline float gaussDerivative(const network* net, const float x)
+static inline float gaussDerivative(const float x)
 {
     return -2 * x * exp(-x*-x);
 }
 
 /**********************************************/
 
-static inline float sinusoid(const network* net, const float x)
+static inline float sinusoid(const float x)
 {
     return sin(x);
 }
 
-static inline float sinusoidDerivative(const network* net, const float x)
+static inline float sinusoidDerivative(const float x)
 {
     return cos(x);
 }
 
 /**********************************************/
 
-static inline float sinc(const network* net, const float x)
+static inline float sinc(const float x)
 {
     if(x == 0){return 1;}
     return sin(x) / x;
 }
 
-static inline float sincDerivative(const network* net, const float x)
+static inline float sincDerivative(const float x)
 {
     if(x == 0){return 0;}
     return (cos(x) / x) - (sin(x) / (x*x));
