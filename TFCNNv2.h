@@ -369,10 +369,8 @@ static inline float elu(const network* net, const float x)
 
 static inline float eluDerivative(const network* net, const float x)
 {
-    if(x > 0)
-        return 1;
-    else
-        return net->elualpha * exp(x);
+    if(x > 0){return 1;}
+    return net->elualpha * exp(x);
 }
 
 /**********************************************/
@@ -397,17 +395,13 @@ static inline float geluDerivative(const float x)
 
 static inline float selu(const float x)
 {
-    if(x < 0)
-        return 1.0507 * (1.67326 * exp(x) - 1.67326);
-
+    if(x < 0){return 1.0507 * (1.67326 * exp(x) - 1.67326);}
     return 1.0507 * x;
 }
 
 static inline float seluDerivative(const float x)
 {
-    if(x < 0)
-        return 1.0507 * (1.67326 * exp(x));
-
+    if(x < 0){return 1.0507 * (1.67326 * exp(x));}
     return 1.0507;
 }
 
@@ -421,10 +415,8 @@ static inline float leaky_relu(const network* net, const float x)
 
 static inline float leaky_reluDerivative(const network* net, const float x)
 {
-    if(x > 0)
-        return 1;
-    else
-        return net->elualpha;
+    if(x > 0){return 1;}
+    return net->elualpha;
 }
 
 /**********************************************/
@@ -437,10 +429,8 @@ static inline float relu(const float x)
 
 static inline float reluDerivative(const float x)
 {
-    if(x > 0)
-        return 1;
-    else
-        return 0;
+    if(x > 0){return 1;}
+    return 0;
 }
 
 /**********************************************/
