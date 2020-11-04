@@ -1,6 +1,6 @@
 ## TFCNN - Tiny Fully Connected Neural Network Library
 
-### Version 2
+### Version 2 [WIP]
 
 - `TFCNNv2.h` is a Linux / Unix / BSD version.
 ```
