@@ -143,7 +143,7 @@ enum
     GELU        = 11, // 0.1 to 0.5 has a chunk missing going from 0.1 to 0; out of a 0-1 total range; it sounds like a lot but only makes up 5.38% of the total distribution
     SELU        = 12, // not sure, implementation seems correct, derivative & activation are ok, alpha dropout seems ok ?
     BENT        = 13,
-    GAUSSIAN    = 14, // modified gauss to actually be of practical use
+    GAUSSIAN    = 14, // modified gauss to be of some practical use
     SINUSOID    = 15,
     SINC        = 16, // not w.r.t f(x), not ideal, but not that off either
     ISRU        = 17,
