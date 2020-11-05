@@ -412,6 +412,7 @@ static inline float table_lerp(const float sa, const float ia, const float sb, c
 static inline float table_derivative(const float* ts, const float* ti, const uint table_size, const float fi, const float fn)
 {
     const uint i = (uint)(table_size * fn);
+    if(i > table_size){return ts[table_size];}
     return table_lerp(ts[i], ti[i], ts[i+1], ti[i+1], fi);
 }
 // don't laugh at me please, i am serious. :'( you have better way ? you email me ^ in header
