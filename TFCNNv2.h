@@ -145,7 +145,7 @@ enum
     BENT        = 13,
     GAUSSIAN    = 14, // modified gauss to be of some practical use
     SINUSOID    = 15,
-    SINC        = 16, // not w.r.t f(x), not ideal, but not that off either
+    SINC        = 16, // It's w.r.t x and not f(x), not ideal, but not that off either
     ISRU        = 17,
     SQNL        = 18  // not pefect, but not that off, ~0.30 for 30% of the total distribution
 }
