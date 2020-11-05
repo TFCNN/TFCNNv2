@@ -138,14 +138,14 @@ enum
     LECUN       = 8,
     ELLIOT      = 9,
     SOFTPLUS    = 10,
-    GELU        = 11, // needs work
+    GELU        = 11, // bad, broken
     SELU        = 12,
-    BENT        = 13, // probably w.r.t f(x)
-    GAUSSIAN    = 14, // not w.r.t f(x)
+    BENT        = 13,
+    GAUSSIAN    = 14, // not w.r.t f(x), broken
     SINUSOID    = 15,
-    SINC        = 16, // not w.r.t f(x)
-    IRSU        = 17, // probably not w.r.t f(x)
-    SQNL        = 18  // probably not w.r.t f(x)
+    SINC        = 16, // not w.r.t f(x), broken
+    ISRU        = 17, // not w.r.t f(x), broken
+    SQNL        = 18  // not w.r.t f(x), broken
 }
 typedef activator;
 
@@ -552,7 +552,7 @@ static inline float isru(const float x)
 
 static inline float isruDerivative(const float x)
 {
-    return pow(-(1 / sqrt(1 + x*x)), 3);
+    return pow((1 / sqrt(1 + x*x)), 3);
 }
 
 /**********************************************/
