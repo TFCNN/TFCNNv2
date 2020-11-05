@@ -82,7 +82,7 @@ enum
     LECUN       = 8,
     ELLIOT      = 9,  // aka softsign
     SOFTPLUS    = 10,
-    GELU        = 11, // 0.1 to 0.5 has a chunk missing going from 0.1 to 0; out of a 0-1 total range; it sounds like a lot but only makes up 5.38% of the total distribution
+    GELU        = 11, // 0.1 to 0.5 has a chunk missing with an avg deviance of 0.25; out of a 0-1 total range; it sounds like a lot but only makes up 5.38% of the total distribution
     SELU        = 12, // not sure, implementation seems correct, derivative & activation are ok, alpha dropout seems ok ?
     BENT        = 13,
     GAUSSIAN    = 14, // modified gauss to be of some practical use
