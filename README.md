@@ -82,12 +82,14 @@ enum
     LECUN       = 8,
     ELLIOT      = 9,  // aka softsign
     SOFTPLUS    = 10,
-    GELU        = 11, // not the best derivative
-    SELU        = 12,
+    GELU        = 11, // 0.1 to 0.5 has a chunk missing going from 0.1 to 0; out of a 0-1 total range; it sounds like a lot but only makes up 5.38% of the total distribution
+    SELU        = 12, // not sure, implementation seems correct, derivative & activation are ok, alpha dropout seems ok ?
     BENT        = 13,
-    GAUSSIAN    = 14,
+    GAUSSIAN    = 14, // modified gauss to be of some practical use
     SINUSOID    = 15,
-    SINC        = 16
+    SINC        = 16, // not w.r.t f(x), not ideal, but not that off either
+    ISRU        = 17,
+    SQNL        = 18  // not pefect, but not that off, ~0.30 for 30% of the total distribution
 }
 typedef activator;
 
