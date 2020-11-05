@@ -404,7 +404,7 @@ static inline void softmax_transform(float* w, const uint n)
         w[i] = exp(w[i]) / d;
 }
 
-// I would like to eventually compact the lookup code into a single swiss-army like function, this function is the working towards that.
+// I would like to eventually compact the lookup code into a single swiss-army like function, this function is the workings towards that.
 static inline float table_lerp(const float sa, const float ia, const float sb, const float ib, const float i)
 {
     return sa + (( (i - ia) / (ib - ia) ) * (sb - sa));
