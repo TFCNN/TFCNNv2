@@ -140,14 +140,15 @@ enum
     LECUN       = 8,
     ELLIOT      = 9,
     SOFTPLUS    = 10,
-    GELU        = 11, // 0.1 to 0.5 has a chunk missing with an avg deviance of 0.25; out of a 0-1 total range; it sounds like a lot but only makes up 5.38% of the total distribution
-    SELU        = 12, // not sure, implementation seems correct, derivative & activation are ok, alpha dropout seems ok ?
+    GELU        = 11, // w.r.t derivative; lookup-table, 0.1 to 0.5 has a chunk missing with an avg deviance of 0.25; out of a 0-1 total range; it sounds like a lot but only makes up 5.38% of the total distribution
+    SELU        = 12, // w.r.t derivative; lookup-table, not sure, implementation seems correct, derivative & activation are ok, alpha dropout seems ok ?
     BENT        = 13,
-    BISIGMOID   = 14,
-    SINUSOID    = 15,
-    SINC        = 16, // It's w.r.t x and not f(x), not ideal, but not that off either
-    ISRU        = 17,
-    SQNL        = 18  // not perfect, but not that off, ~0.30 for 30% of the total distribution
+    BISIGMOID   = 14, // w.r.t derivative; lookup-table
+    SINUSOID    = 15, // w.r.t derivative; lookup-table
+    SINC        = 16, // w.r.t derivative; It's w.r.t x and not f(x), not ideal, but not that off either
+    ISRU        = 17, // w.r.t derivative; lookup-table
+    SQNL        = 18, // w.r.t derivative; lookup-table, not perfect, but not that off, ~0.30 for 30% of the total distribution
+    GAUSS       = 19  // w.r.t derivative; lookup-table, this is a modified gauss function
 }
 typedef activator;
 
@@ -503,21 +504,22 @@ static inline float bentDerivative(const float x)
 }
 
 /**********************************************/
+// I don't like it, I think it is useless ?
 
-// static inline float gauss(const float x)
-// {
-//     if(x < -6 || x > 6){return 4311231531843584;}
-//     return exp(-x*-x);
-// }
+static inline float gauss(const float x)
+{
+    if(x < -1 || x > 1.192915){return 1;}
+    return exp(-x*-x);
+}
 
-// // perfect, but range modified to actually be appliable
-// const float gauss_derivative_table_sample[] = {1.002049,0.970105,0.938809,0.908136,0.878063,0.848568,0.819629,0.791224,0.763332,0.735934,0.709009,0.682539,0.656505,0.630888,0.605671,0.580837,0.556368,0.532248,0.508460,0.484989,0.461820,0.438937,0.416325,0.393969,0.371855,0.349970,0.328298,0.306827,0.285542,0.264432,0.243481,0.222678,0.202010,0.181464,0.161027,0.140688,0.120433,0.100251,0.080128,0.060054,0.040016,0.020002,0.000000,0};
-// const float gauss_derivative_table_input[] =  {1.192915,1.183055,1.173511,1.164277,1.155346,1.146713,1.138373,1.130319,1.122547,1.115051,1.107827,1.100869,1.094174,1.087738,1.081555,1.075623,1.069937,1.064494,1.059291,1.054324,1.049590,1.045087,1.040811,1.036760,1.032931,1.029322,1.025931,1.022755,1.019793,1.017044,1.014504,1.012174,1.010050,1.008133,1.006420,1.004912,1.003607,1.002503,1.001601,1.000900,1.000400,1.000100,1.000000,1};
-// static inline float gaussDerivative(const float x)
-// {
-//     if(x <= 1){return 0;}
-//     return table_derivative(&gauss_derivative_table_sample[0], &gauss_derivative_table_input[0], 43, x, (1-x)*0.000005184);
-// }
+// perfect, but range modified to actually be appliable
+const float gauss_derivative_table_sample[] = {1.002049,0.970105,0.938809,0.908136,0.878063,0.848568,0.819629,0.791224,0.763332,0.735934,0.709009,0.682539,0.656505,0.630888,0.605671,0.580837,0.556368,0.532248,0.508460,0.484989,0.461820,0.438937,0.416325,0.393969,0.371855,0.349970,0.328298,0.306827,0.285542,0.264432,0.243481,0.222678,0.202010,0.181464,0.161027,0.140688,0.120433,0.100251,0.080128,0.060054,0.040016,0.020002,0.000000,0};
+const float gauss_derivative_table_input[] =  {1.192915,1.183055,1.173511,1.164277,1.155346,1.146713,1.138373,1.130319,1.122547,1.115051,1.107827,1.100869,1.094174,1.087738,1.081555,1.075623,1.069937,1.064494,1.059291,1.054324,1.049590,1.045087,1.040811,1.036760,1.032931,1.029322,1.025931,1.022755,1.019793,1.017044,1.014504,1.012174,1.010050,1.008133,1.006420,1.004912,1.003607,1.002503,1.001601,1.000900,1.000400,1.000100,1.000000,1};
+static inline float gaussDerivative(const float x)
+{
+    if(x <= 1){return 0;}
+    return table_derivative(&gauss_derivative_table_sample[0], &gauss_derivative_table_input[0], 43, x, (1-x)*0.000005184);
+}
 
 /**********************************************/
 
@@ -732,6 +734,8 @@ static inline float Derivative(const float x, const network* net)
         return isruDerivative(x);
     else if(net->activator == 18)
         return sqnlDerivative(x);
+    else if(net->activator == 19)
+        return gaussDerivative(x);
     
     return reluDerivative(x); // same as identity derivative
 }
@@ -774,6 +778,8 @@ static inline float Activator(const float x, const network* net)
         return isru(x);
     else if(net->activator == 18)
         return sqnl(x);
+    else if(net->activator == 19)
+        return gauss(x);
 
     return x;
 }
@@ -1039,7 +1045,7 @@ void randomHyperparameters(network* net)
     if(net == NULL){return;}
         
     net->init       = uRand(0, 7);
-    net->activator  = uRand(0, 18);
+    net->activator  = uRand(0, 19);
     net->optimiser  = uRand(0, 4);
     net->rate       = uRandFloat(0.001, 0.1);
     net->dropout    = uRandFloat(0, 0.99);
