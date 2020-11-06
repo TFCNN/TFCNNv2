@@ -82,14 +82,14 @@ enum
     LECUN       = 8,
     ELLIOT      = 9,
     SOFTPLUS    = 10,
-    GELU        = 11, // lookup-table, 0.1 to 0.5 has a chunk missing with an avg deviance of 0.25; out of a 0-1 total range; it sounds like a lot but only makes up 5.38% of the total distribution
-    SELU        = 12, // lookup-table, not sure, implementation seems correct, derivative & activation are ok, alpha dropout seems ok ?
+    GELU        = 11, // w.r.t derivative; lookup-table, 0.1 to 0.5 has a chunk missing with an avg deviance of 0.25; out of a 0-1 total range; it sounds like a lot but only makes up 5.38% of the total distribution
+    SELU        = 12, // w.r.t derivative; lookup-table, not sure, implementation seems correct, derivative & activation are ok, alpha dropout seems ok ?
     BENT        = 13,
-    BISIGMOID   = 14, // lookup-table
-    SINUSOID    = 15, // lookup-table
-    SINC        = 16, // It's w.r.t x and not f(x), not ideal, but not that off either
-    ISRU        = 17, // lookup-table
-    SQNL        = 18  // lookup-table, not perfect, but not that off, ~0.30 for 30% of the total distribution
+    BISIGMOID   = 14, // w.r.t derivative; lookup-table
+    SINUSOID    = 15, // w.r.t derivative; lookup-table
+    SINC        = 16, // w.r.t derivative; It's w.r.t x and not f(x), not ideal, but not that off either
+    ISRU        = 17, // w.r.t derivative; lookup-table
+    SQNL        = 18  // w.r.t derivative; lookup-table, not perfect, but not that off, ~0.30 for 30% of the total distribution
 }
 typedef activator;
 
