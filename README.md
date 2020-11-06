@@ -89,7 +89,8 @@ enum
     SINUSOID    = 15, // w.r.t derivative; lookup-table
     SINC        = 16, // w.r.t derivative; It's w.r.t x and not f(x), not ideal, but not that off either
     ISRU        = 17, // w.r.t derivative; lookup-table
-    SQNL        = 18  // w.r.t derivative; lookup-table, not perfect, but not that off, ~0.30 for 30% of the total distribution
+    SQNL        = 18, // w.r.t derivative; lookup-table, not perfect, but not that off, ~0.30 for 30% of the total distribution
+    GAUSS       = 19  // w.r.t derivative; lookup-table, this is a modified gauss function
 }
 typedef activator;
 
