@@ -1,7 +1,7 @@
 /*
 --------------------------------------------------
     James William Fletcher (james@voxdsp.com)
-        October 2020 - TFCNNv2.1
+        November 2020 - TFCNNv2.1
 --------------------------------------------------
     Tiny Fully Connected Neural Network Library
     https://github.com/tfcnn
