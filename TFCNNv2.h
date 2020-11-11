@@ -404,6 +404,13 @@ static inline void softmax_transform(float* w, const uint n)
     for(uint i = 0; i < n; i++)
         w[i] = exp(w[i]) / d;
 }
+float crossEntropy(const float predicted, const float expected) //log loss
+{
+    if(expected == 1)
+        return -log(predicted);
+    else
+        return -log(1 - predicted);
+}
 
 // I would like to eventually compact the lookup code into a single swiss-army like function, this function is the workings towards that.
 static inline float table_lerp(const float sa, const float ia, const float sb, const float ib, const float i)
