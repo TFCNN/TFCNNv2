@@ -1,6 +1,6 @@
 ## TFCNN - Tiny Fully Connected Neural Network Library
 
-`[9/11/20]` - Added a [`TFCNNv21.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNV2.1/TFCNNv21.h) version which has more accurate computations of SELU, GELU, MISH and SINC.
+`[9/11/20]` - Added a [`TFCNNv21.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNV2.1/TFCNNv21.h) version which has more accurate computations of SELU, GELU, MISH and SINC.<br>
 `[11/11/20]` - Added a [`TFCNNv2_softmax.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2_softmax.h) version for multiple classification on the same network.
 
 ### Version 2 [WIP]
