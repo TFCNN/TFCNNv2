@@ -408,7 +408,6 @@ void newSRAND()
 
 /**********************************************/
 
-// well, it's never going to be used, but I left it in here anyway.
 static inline void softmax_transform(float* w, const uint n)
 {
     float d = 0;
@@ -425,6 +424,8 @@ float crossEntropy(const float predicted, const float expected) //log loss
     else
         return -log(1 - predicted);
 }
+
+/**********************************************/
 
 // I would like to eventually compact the lookup code into a single swiss-army like function, this function is the workings towards that.
 static inline float table_lerp(const float sa, const float ia, const float sb, const float ib, const float i)
@@ -449,6 +450,8 @@ static inline float find_derivative(const float* ts, const float* ti, const uint
     }
     return table_derivative(ts, ti, table_size, fi, fn);
 }
+
+/**********************************************/
 
 static inline float softplus(const float x) //derivative is sigmoid()
 {
@@ -1283,7 +1286,7 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     float eo = net->max_target;
     if(learn == LEARN_MIN)
         eo = net->min_target;
-    net->error += crossEntropy(output, eo); //eo - output;
+    net->error +=  eo - output; //crossEntropy(output, eo);
 
     // batching controller
     net->cbatches++;
@@ -1312,8 +1315,8 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     // define error buffers
     float ef[net->num_layers-1][net->num_layerunits];
 
-    // output (binary classifier) derivative error
-    const float eout = net->gain * sigmoidDerivative(net->foutput) * net->error;
+    // output softmax derivative error
+    const float eout = net->gain * (net->foutput - 1) * net->error;
 
     // output derivative error layer before output layer
     float ler = 0;
