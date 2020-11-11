@@ -6,7 +6,7 @@
 ```
 // primary function set
 int   createNetwork(network* net, const weight_init_type init_type, const uint num_inputs, const uint num_hidden_layers, const uint num_layer_units, const uint default_settings);
-float processNetwork(network* net, float* inputs, const learn_type learn);
+float processNetwork(network* net, const float* inputs, const learn_type learn);
 void  resetNetwork(network* net);
 void  destroyNetwork(network* net);
 int   saveNetwork(network* net, const char* file);
