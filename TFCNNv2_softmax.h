@@ -1286,7 +1286,7 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     float eo = net->max_target;
     if(learn == LEARN_MIN)
         eo = net->min_target;
-    net->error +=  eo - output; //crossEntropy(output, eo);
+    net->error +=  eo - crossEntropy(output, eo); //eo - output;
 
     // batching controller
     net->cbatches++;
@@ -1316,7 +1316,7 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     float ef[net->num_layers-1][net->num_layerunits];
 
     // output softmax derivative error
-    const float eout = net->gain * (net->foutput - 1) * net->error;
+    const float eout = net->gain * sigmoidDerivative(net->foutput) * net->error;
 
     // output derivative error layer before output layer
     float ler = 0;
