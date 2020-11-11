@@ -1286,7 +1286,7 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     float eo = net->max_target;
     if(learn == LEARN_MIN)
         eo = net->min_target;
-    net->error += eo - output;
+    net->error += crossEntropy(output, eo); //eo - output;
 
     // batching controller
     net->cbatches++;
