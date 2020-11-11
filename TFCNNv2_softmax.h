@@ -17,7 +17,7 @@
             will return the output of only the softmax
             at the onehot_vector position. Otherwise it
             will return a net->num_outputs size array
-            of all softmax outputs.
+            of all softmax outputs also.
 */
 
 #ifndef TFCNN_H
