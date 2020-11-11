@@ -1154,12 +1154,9 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
     }
 
     // create output layer
-    for(int i = 0; i < num_outputs; i++)
-    {
-        net->layer[layers-1] = malloc(num_outputs * sizeof(ptron));
-        if(net->layer[layers-1] == NULL)
-            return ERROR_ALLOC_OUTPUTLAYER_FAIL;
-    }
+    net->layer[layers-1] = malloc(num_outputs * sizeof(ptron));
+    if(net->layer[layers-1] == NULL)
+        return ERROR_ALLOC_OUTPUTLAYER_FAIL;
 
     // init weight
     float d = 1; //WEIGHT_INIT_UNIFORM / WEIGHT_INIT_NORMAL
