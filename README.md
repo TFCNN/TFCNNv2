@@ -1,6 +1,6 @@
 ## TFCNN - Tiny Fully Connected Neural Network Library
 
-`[11/11/20]` - Added a `TFCNNv2_softmax.h` version for multiple classification on the same network.
+`[11/11/20]` - Added a [`TFCNNv2_softmax.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2_softmax.h) version for multiple classification on the same network.
 
 ### Version 2 [WIP]
 
