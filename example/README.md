@@ -5,7 +5,7 @@ It can be accessed via command line or run as a service where scripts aggregate 
 
 A php script is enclosed which will aggregate data from a telegram bot that has privacy mode disabled.
 
-Compile using `gcc main.c -lm -Ofast -o bot` for example, ensure `TFCNNv2.h` is included in the same directory.
+Compile using `gcc main.c -lm -Ofast -o bot` for example, ensure [`TFCNNv2.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2.h) is included in the same directory.
 
 ## Example Usage - Commandline Arguments
 - ```./bot retrain <optional file path>```
