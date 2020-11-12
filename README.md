@@ -1,5 +1,5 @@
-# TFCNNv2 - Tiny Fully Connected Neural Network Library [WIP]
-`TFCNNv2` and all variants are targeted at Linux / Unix / BSD platforms; for a truly cross-platform implementation please refer to [`TFCNNv1`](https://github.com/TFCNN/TFCNNv1).
+## TFCNNv2 - Tiny Fully Connected Neural Network Library [WIP]
+#### `TFCNNv2` and all variants are targeted at Linux / Unix / BSD platforms; for a truly cross-platform implementation please refer to [`TFCNNv1`](https://github.com/TFCNN/TFCNNv1).
 
 `[9/11/20]` - Added [`TFCNNv21.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNV2.1) for more accurate computations of `SELU, GELU, MISH, SQNL` and `SINC`.
 <br>`[11/11/20]` - Added [`TFCNNv2_softmax.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2_softmax.h) for multiple classification using a softmax layer with cross-entropy loss.
