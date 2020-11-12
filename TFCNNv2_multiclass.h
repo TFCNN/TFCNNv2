@@ -1217,7 +1217,7 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
         for(int j = 0; j < net->num_layerunits; j++)
             of[i][j] = Activator(doPerceptron(&of[i-1][0], &net->layer[i][j]), net);
 
-    // softmax classifier output layer, sigmoid activation
+    // output layer
     float os[net->num_outputs];
     for(int i = 0; i < net->num_outputs; i++)
         os[i] = sigmoid(doPerceptron(&of[net->num_layers-2][0], &net->layer[net->num_layers-1][0]));
@@ -1295,7 +1295,7 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     // define error buffers
     float ef[net->num_layers-1][net->num_layerunits];
 
-    // output softmax derivative error
+    // output derivative error
     const float eout = net->gain * sigmoidDerivative(net->foutput) * net->error;
 
     // output derivative error layer before output layer
