@@ -1366,10 +1366,13 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     }
 
     // update output layer weights
-    for(int j = 0; j < net->layer[net->num_layers-1][0].weights; j++)
-        net->layer[net->num_layers-1][0].data[j] += doDropout(net, Optimiser(net, net->output[net->num_layers-2][j], eout, &net->layer[net->num_layers-1][0].momentum[j]), 1);
+    for(int i = 0; i < net->num_outputs; i++)
+    {
+        for(int j = 0; j < net->layer[net->num_layers-1][0].weights; j++)
+            net->layer[net->num_layers-1][i].data[j] += doDropout(net, Optimiser(net, net->output[net->num_layers-2][j], eout, &net->layer[net->num_layers-1][i].momentum[j]), 1);
 
-    net->layer[net->num_layers-1][0].bias += Optimiser(net, 1, eout, &net->layer[net->num_layers-1][0].bias_momentum);
+        net->layer[net->num_layers-1][i].bias += Optimiser(net, 1, eout, &net->layer[net->num_layers-1][i].bias_momentum);
+    }
 
     // done, return forward prop output
     return output;
