@@ -1,4 +1,5 @@
 ## TFCNNv2 - Tiny Fully Connected Neural Network Library [WIP]
+TFCNNv2 and all variants are targeted at Linux / Unix / BSD platformsm for a truly cross-platform implementation please refer to [`TFCNNv1`](https://github.com/TFCNN/TFCNNv1).
 
 `[9/11/20]` - Added [`TFCNNv21.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNV2.1) for more accurate computations of `SELU, GELU, MISH, SQNL` and `SINC`.
 <br>`[11/11/20]` - Added [`TFCNNv2_softmax.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2_softmax.h) for multiple classification using a softmax layer with cross-entropy loss.
@@ -7,8 +8,6 @@
 **Notice:** you cannot share `saveNetwork()` files between versions, each version saves a different format of the `saveNetwork()` file.
 
 ### Version 2
-
-- `TFCNNv2.h` is a Linux / Unix / BSD version.
 ```
 // primary function set
 int   createNetwork(network* net, const weight_init_type init_type, const uint num_inputs, const uint num_hidden_layers, const uint num_layer_units, const uint default_settings);
