@@ -81,10 +81,9 @@ struct
 
     // backprop
     uint cbatches;
-    uint* cbatchesdiv;
     float** output;
-    float* foutput;
-    float* error;
+    float foutput;
+    float error;
 
     // selu alpha dropout
     float drop_a;
@@ -107,9 +106,6 @@ typedef network;
 #define ERROR_ALLOC_LAYERS_ARRAY_FAIL -5
 #define ERROR_ALLOC_LAYERS_FAIL -6
 #define ERROR_ALLOC_OUTPUTLAYER_FAIL -7
-#define ERROR_ALLOC_OUTPUTLAYER_FAIL_1 -15
-#define ERROR_ALLOC_OUTPUTLAYER_FAIL_2 -16
-#define ERROR_ALLOC_OUTPUTLAYER_FAIL_3 -17
 #define ERROR_ALLOC_PERCEPTRON_DATAWEIGHTS_FAIL -8
 #define ERROR_ALLOC_PERCEPTRON_ALPHAWEIGHTS_FAIL -9
 #define ERROR_CREATE_FIRSTLAYER_FAIL -10
@@ -1125,6 +1121,8 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
         net->max_target = 1;
     }
     net->cbatches   = 0;
+    net->error      = 0;
+    net->foutput    = 0;
 
     // alpha dropout transformation coefficients for Unit/Regular Dropout
     float d1 = 1 - net->dropout;
@@ -1162,19 +1160,6 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
     net->layer[layers-1] = malloc(num_outputs * sizeof(ptron));
     if(net->layer[layers-1] == NULL)
         return ERROR_ALLOC_OUTPUTLAYER_FAIL;
-    
-    // allocate output batching buffers
-    net->error = calloc(num_outputs, sizeof(float));    //calloc zero init
-    if(net->error == NULL)
-        return ERROR_ALLOC_OUTPUTLAYER_FAIL_1;
-    
-    net->foutput = calloc(num_outputs, sizeof(float));  //calloc zero init
-    if(net->foutput == NULL)
-        return ERROR_ALLOC_OUTPUTLAYER_FAIL_2;
-
-    net->cbatchesdiv = calloc(num_outputs, sizeof(uint));  //calloc zero init
-    if(net->cbatchesdiv == NULL)
-        return ERROR_ALLOC_OUTPUTLAYER_FAIL_3;
 
     // init weight
     float d = 1; //WEIGHT_INIT_UNIFORM / WEIGHT_INIT_NORMAL
@@ -1259,12 +1244,11 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
 
     // get the softmax output for the one hot vector position
     float output = 0;
-    uint ohvp = 0;
-    for(; ohvp < net->num_outputs; ohvp++)
+    for(int i = 0; i < net->num_outputs; i++)
     {
-        if(onehot_vector[ohvp] == 1)
+        if(onehot_vector[i] == 1)
         {
-            output = os[ohvp];
+            output = os[i];
             break;
         }
     }
@@ -1288,13 +1272,12 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
         for(int i = 0; i < net->num_layers-1; i++)
             memset(net->output[i], 0x00, net->num_layerunits * sizeof(float));
 
-        memset(net->cbatchesdiv, 0x00, net->num_outputs * sizeof(float));
-        memset(net->foutput, 0x00, net->num_outputs * sizeof(float));
-        memset(net->error, 0x00, net->num_outputs * sizeof(float));
+        net->foutput = 0;
+        net->error = 0;
     }
 
     // batch accumulation of outputs
-    net->foutput[ohvp] += output;
+    net->foutput += output;
     for(int i = 0; i < net->num_layers-1; i++)
         for(int j = 0; j < net->num_layerunits; j++)
             net->output[i][j] += of[i][j];
@@ -1303,11 +1286,10 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     float eo = net->max_target;
     if(learn == LEARN_MIN)
         eo = net->min_target;
-    net->error[ohvp] += (eo - output) * crossEntropy(output, eo); // this is the softmax derivative pre-combined with the cross-entropy loss [1]
+    net->error += (eo - output) * crossEntropy(output, eo); // this is the softmax derivative pre-combined with the cross-entropy loss [1]
 
     // batching controller
     net->cbatches++;
-    net->cbatchesdiv[ohvp]++; // each outpt has its own batching counter for division
     if(net->cbatches < net->batches)
     {
         return output;
@@ -1315,14 +1297,8 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     else
     {
         // divide accumulators to mean
-        for(int i = 0; i < net->num_outputs; i++)
-        {
-            net->error[i] /= net->cbatchesdiv[i];
-            net->foutput[i] /= net->cbatchesdiv[i];
-            
-            // reset batcher count
-            net->cbatchesdiv[i] = 0;
-        }
+        net->error /= net->batches;
+        net->foutput /= net->batches;
 
         for(int i = 0; i < net->num_layers-1; i++)
             for(int j = 0; j < net->num_layerunits; j++)
@@ -1340,7 +1316,7 @@ float processNetwork(network* net, const float* inputs, const learn_type learn, 
     float ef[net->num_layers-1][net->num_layerunits];
 
     // output softmax derivative error
-    const float eout = net->gain * net->error[ohvp]; // we no longer need a derivative in this stage as it was pre-computed already [1]
+    const float eout = net->gain * net->error; // we no longer need a derivative in this stage as it was pre-computed already [1]
 
     // output derivative error layer before output layer
     float ler = 0;
@@ -1413,10 +1389,9 @@ void resetNetwork(network* net)
     // reset batching counter
     for(int i = 0; i < net->num_layers-1; i++)
         memset(net->output[i], 0x00, net->num_layerunits * sizeof(float));
-    memset(net->cbatchesdiv, 0x00, net->num_outputs * sizeof(float));
-    memset(net->foutput, 0x00, net->num_outputs * sizeof(float));
-    memset(net->error, 0x00, net->num_outputs * sizeof(float));
     net->cbatches = 0;
+    net->foutput = 0;
+    net->error = 0;
     
     // init weight
     float d = 1; //WEIGHT_INIT_RANDOM
