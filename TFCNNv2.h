@@ -215,7 +215,7 @@ void randomHyperparameters(network* net);
 */
 
 int createNetwork(network* net, const weight_init_type init_type, const uint num_inputs, const uint num_hidden_layers, const uint num_layer_units, const uint default_settings);
-float processNetwork(network* net, const float* inputs, const learn_type learn);
+float processNetwork(network* net, float* inputs, const learn_type learn);
 void resetNetwork(network* net);
 void destroyNetwork(network* net);
 int saveNetwork(network* net, const char* file);
@@ -394,6 +394,24 @@ void newSRAND()
 
 /**********************************************/
 
+// well, it's never going to be used, but I left it in here anyway.
+static inline void softmax_transform(float* w, const uint n)
+{
+    float d = 0;
+    for(uint i = 0; i < n; i++)
+        d += exp(w[i]);
+
+    for(uint i = 0; i < n; i++)
+        w[i] = exp(w[i]) / d;
+}
+float crossEntropy(const float predicted, const float expected) //log loss
+{
+    if(expected == 1)
+        return -log(predicted);
+    else
+        return -log(1 - predicted);
+}
+
 // I would like to eventually compact the lookup code into a single swiss-army like function, this function is the workings towards that.
 static inline float table_lerp(const float sa, const float ia, const float sb, const float ib, const float i)
 {
@@ -417,8 +435,6 @@ static inline float find_derivative(const float* ts, const float* ti, const uint
     }
     return table_derivative(ts, ti, table_size, fi, fn);
 }
-
-/**********************************************/
 
 static inline float softplus(const float x) //derivative is sigmoid()
 {
@@ -1173,7 +1189,7 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
     return 0;
 }
 
-float processNetwork(network* net, const float* inputs, const learn_type learn)
+float processNetwork(network* net, float* inputs, const learn_type learn)
 {
     // validate [it's ok, the output should be sigmoid 0-1 otherwise]
     if(net == NULL)
@@ -1260,7 +1276,7 @@ float processNetwork(network* net, const float* inputs, const learn_type learn)
     // output (binary classifier) derivative error
     const float eout = net->gain * sigmoidDerivative(net->foutput) * net->error;
 
-    // output derivative error layer before output layer
+    // output 'derivative error layer' of layer before/behind the output layer
     float ler = 0;
     for(int j = 0; j < net->layer[net->num_layers-1][0].weights; j++)
         ler += net->layer[net->num_layers-1][0].data[j] * eout;
@@ -1271,15 +1287,17 @@ float processNetwork(network* net, const float* inputs, const learn_type learn)
     // output derivative error of all other layers
     for(int i = net->num_layers-3; i >= 0; i--)
     {
+        // compute total error of layer above w.r.t all weights and units of the above layer
+        float ler = 0;
         for(int j = 0; j < net->num_layerunits; j++)
         {
-            float ler = 0;
             for(int k = 0; k < net->layer[i+1][j].weights; k++)
                 ler += net->layer[i+1][j].data[k] * ef[i+1][j];
             ler += net->layer[i+1][j].bias * ef[i+1][j];
-
-            ef[i][j] = net->gain * Derivative(of[i][j], net) * ler;
         }
+        // propagate that error to into the error variable of each unit of the current layer
+        for(int j = 0; j < net->num_layerunits; j++)
+            ef[i][j] = net->gain * Derivative(of[i][j], net) * ler;
     }
 
 /**************************************
