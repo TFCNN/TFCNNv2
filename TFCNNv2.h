@@ -215,7 +215,7 @@ void randomHyperparameters(network* net);
 */
 
 int createNetwork(network* net, const weight_init_type init_type, const uint num_inputs, const uint num_hidden_layers, const uint num_layer_units, const uint default_settings);
-float processNetwork(network* net, float* inputs, const learn_type learn);
+float processNetwork(network* net, const float* inputs, const learn_type learn);
 void resetNetwork(network* net);
 void destroyNetwork(network* net);
 int saveNetwork(network* net, const char* file);
@@ -393,24 +393,6 @@ void newSRAND()
 }
 
 /**********************************************/
-
-// well, it's never going to be used, but I left it in here anyway.
-static inline void softmax_transform(float* w, const uint n)
-{
-    float d = 0;
-    for(uint i = 0; i < n; i++)
-        d += exp(w[i]);
-
-    for(uint i = 0; i < n; i++)
-        w[i] = exp(w[i]) / d;
-}
-float crossEntropy(const float predicted, const float expected) //log loss
-{
-    if(expected == 1)
-        return -log(predicted);
-    else
-        return -log(1 - predicted);
-}
 
 // I would like to eventually compact the lookup code into a single swiss-army like function, this function is the workings towards that.
 static inline float table_lerp(const float sa, const float ia, const float sb, const float ib, const float i)
@@ -1189,7 +1171,7 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
     return 0;
 }
 
-float processNetwork(network* net, float* inputs, const learn_type learn)
+float processNetwork(network* net, const float* inputs, const learn_type learn)
 {
     // validate [it's ok, the output should be sigmoid 0-1 otherwise]
     if(net == NULL)
