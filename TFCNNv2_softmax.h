@@ -911,7 +911,10 @@ int createPerceptron(ptron* p, const uint weights, const float d, const weight_i
 
     p->momentum = malloc(weights * sizeof(float));
     if(p->momentum == NULL)
+    {
+        free(p->data);
         return ERROR_ALLOC_PERCEPTRON_ALPHAWEIGHTS_FAIL;
+    }
 
     p->weights = weights;
 
@@ -1119,29 +1122,44 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
     // create layer output buffers
     net->output = malloc((layers-1) * sizeof(float*));
     if(net->output == NULL)
+    {
+        destroyNetwork(net);
         return ERROR_ALLOC_OUTPUT_ARRAY_FAIL;
+    }
     for(int i = 0; i < layers-1; i++)
     {
         net->output[i] = malloc(layers_size * sizeof(float));
         if(net->output[i] == NULL)
+        {
+            destroyNetwork(net);
             return ERROR_ALLOC_OUTPUT_FAIL;
+        }
     }
 
     // create layers
     net->layer = malloc(layers * sizeof(ptron*));
     if(net->layer == NULL)
+    {
+        destroyNetwork(net);
         return ERROR_ALLOC_LAYERS_ARRAY_FAIL;
+    }
     for(int i = 0; i < layers-1; i++)
     {
         net->layer[i] = malloc(layers_size * sizeof(ptron));
         if(net->layer[i] == NULL)
+        {
+            destroyNetwork(net);
             return ERROR_ALLOC_LAYERS_FAIL;
+        }
     }
 
     // create output layer
     net->layer[layers-1] = malloc(num_outputs * sizeof(ptron));
     if(net->layer[layers-1] == NULL)
+    {
+        destroyNetwork(net);
         return ERROR_ALLOC_OUTPUTLAYER_FAIL;
+    }
 
     // init weight
     float d = 1; //WEIGHT_INIT_UNIFORM / WEIGHT_INIT_NORMAL
@@ -1158,8 +1176,13 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
 
     // create first layer perceptrons
     for(int i = 0; i < layers_size; i++)
+    {
         if(createPerceptron(&net->layer[0][i], inputs, d, net->init) < 0)
+        {
+            destroyNetwork(net);
             return ERROR_CREATE_FIRSTLAYER_FAIL;
+        }
+    }
     
     // weight init
     if(init_weights_type == WEIGHT_INIT_UNIFORM_GLOROT)
@@ -1175,9 +1198,16 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
 
     // create hidden layers
     for(uint i = 1; i < layers-1; i++)
+    {
         for(int j = 0; j < layers_size; j++)
+        {
             if(createPerceptron(&net->layer[i][j], layers_size, d, net->init) < 0)
+            {
+                destroyNetwork(net);
                 return ERROR_CREATE_HIDDENLAYER_FAIL;
+            }
+        }
+    }
 
     // weight init
     if(init_weights_type == WEIGHT_INIT_UNIFORM_GLOROT)
@@ -1187,8 +1217,13 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
 
     // create output layer
     for(uint i = 0; i < num_outputs; i++)
+    {
         if(createPerceptron(&net->layer[layers-1][i], layers_size, d, net->init) < 0)
+        {
+            destroyNetwork(net);
             return ERROR_CREATE_OUTPUTLAYER_FAIL;
+        }
+    }
 
     // done
     return 0;
