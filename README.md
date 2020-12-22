@@ -70,7 +70,8 @@ enum
     WEIGHT_INIT_NORMAL              = 4,
     WEIGHT_INIT_NORMAL_GLOROT       = 5,
     WEIGHT_INIT_NORMAL_LECUN        = 6,
-    WEIGHT_INIT_NORMAL_LECUN_POW    = 7
+    WEIGHT_INIT_NORMAL_LECUN_POW    = 7,
+    WEIGHT_INIT_NORMAL_RELU         = 8
 }
 typedef weight_init_type;
 
