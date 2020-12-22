@@ -137,7 +137,8 @@ enum
     WEIGHT_INIT_NORMAL              = 4,
     WEIGHT_INIT_NORMAL_GLOROT       = 5,
     WEIGHT_INIT_NORMAL_LECUN        = 6,
-    WEIGHT_INIT_NORMAL_LECUN_POW    = 7
+    WEIGHT_INIT_NORMAL_LECUN_POW    = 7,
+    WEIGHT_INIT_NORMAL_RELU         = 8
 }
 typedef weight_init_type;
 
@@ -1154,6 +1155,8 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
         d = sqrt(2.0/(inputs+layers_size));
     else if(init_weights_type == WEIGHT_INIT_NORMAL_LECUN)
         d = sqrt(1.0/inputs);
+    else if(init_weights_type == WEIGHT_INIT_NORMAL_RELU)
+        d = sqrt(2.0/inputs);
 
     // create first layer perceptrons
     for(int i = 0; i < layers_size; i++)
@@ -1176,6 +1179,8 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
         d = sqrt(2.0/(layers_size+layers_size));
     else if(init_weights_type == WEIGHT_INIT_NORMAL_LECUN)
         d = sqrt(1.0/layers_size);
+    else if(init_weights_type == WEIGHT_INIT_NORMAL_RELU)
+        d = sqrt(2.0/layers_size);
 
     // create hidden layers
     for(uint i = 1; i < layers-1; i++)
