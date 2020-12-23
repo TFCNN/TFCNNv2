@@ -5,6 +5,8 @@
 --------------------------------------------------
     Tiny Fully Connected Neural Network Library
     https://github.com/tfcnn
+    
+    No word embeddings used.
 */
 
 #pragma GCC diagnostic ignored "-Wunused-result"
