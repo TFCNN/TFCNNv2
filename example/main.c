@@ -32,7 +32,7 @@
 #define WORD_SIZE 32
 #define MESSAGE_SIZE WORD_SIZE*DIGEST_SIZE
 
-#define DATA_TRAIN_PERCENT 0.7
+#define DATA_TRAIN_PERCENT 0.7 // the remainder is the data we use to test the trained model to generate the rmse (rmseDiscriminator())
 #define DATA_SIZE 995
 #define OUTPUT_QUOTES 33333
 #define HIDDEN_SIZE 256
