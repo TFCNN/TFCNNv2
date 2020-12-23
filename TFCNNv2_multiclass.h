@@ -1036,7 +1036,7 @@ void randomHyperparameters(network* net)
 {
     if(net == NULL){return;}
         
-    net->init       = uRand(0, 7);
+    net->init       = uRand(0, 9);
     net->activator  = uRand(0, 19);
     net->optimiser  = uRand(0, 4);
     net->rate       = uRandFloat(0.001, 0.1);
