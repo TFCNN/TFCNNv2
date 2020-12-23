@@ -134,11 +134,12 @@ enum
     WEIGHT_INIT_UNIFORM_GLOROT      = 1,
     WEIGHT_INIT_UNIFORM_LECUN       = 2,
     WEIGHT_INIT_UNIFORM_LECUN_POW   = 3,
-    WEIGHT_INIT_NORMAL              = 4,
-    WEIGHT_INIT_NORMAL_GLOROT       = 5,
-    WEIGHT_INIT_NORMAL_LECUN        = 6,
-    WEIGHT_INIT_NORMAL_LECUN_POW    = 7,
-    WEIGHT_INIT_NORMAL_RELU         = 8
+    WEIGHT_INIT_UNIFORM_RELU        = 4, // he initialisation
+    WEIGHT_INIT_NORMAL              = 5,
+    WEIGHT_INIT_NORMAL_GLOROT       = 6,
+    WEIGHT_INIT_NORMAL_LECUN        = 7,
+    WEIGHT_INIT_NORMAL_LECUN_POW    = 8,
+    WEIGHT_INIT_NORMAL_RELU         = 9  // he initialisation
 }
 typedef weight_init_type;
 
@@ -1151,6 +1152,8 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
         d = sqrt(3.0/inputs);
     else if(init_weights_type == WEIGHT_INIT_UNIFORM_LECUN_POW)
         d = pow(inputs, 0.5);
+    else if(init_weights_type == WEIGHT_INIT_UNIFORM_RELU)
+        d = sqrt(6.0/inputs);
     else if(init_weights_type == WEIGHT_INIT_NORMAL_GLOROT)
         d = sqrt(2.0/(inputs+layers_size));
     else if(init_weights_type == WEIGHT_INIT_NORMAL_LECUN)
@@ -1175,6 +1178,8 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
         d = sqrt(3.0/layers_size);
     else if(init_weights_type == WEIGHT_INIT_UNIFORM_LECUN_POW || init_weights_type == WEIGHT_INIT_NORMAL_LECUN_POW)
         d = pow(layers_size, 0.5);
+    else if(init_weights_type == WEIGHT_INIT_UNIFORM_RELU)
+        d = sqrt(6.0/layers_size);
     else if(init_weights_type == WEIGHT_INIT_NORMAL_GLOROT)
         d = sqrt(2.0/(layers_size+layers_size));
     else if(init_weights_type == WEIGHT_INIT_NORMAL_LECUN)
