@@ -110,4 +110,13 @@ enum
     OPTIM_RMSPROP   = 4
 }
 typedef optimiser;
+
+enum 
+{
+    LOSS_ABSOLUTE       = 0,
+    LOSS_SQUARED        = 1,
+    LOSS_MEANSQUARED    = 2,
+    LOSS_CROSSENTROPY   = 3
+}
+typedef loss;
 ```
