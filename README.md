@@ -24,6 +24,7 @@ void setActivator(network* net, const activator u);
 void setBatches(network* net, const uint u);
 void setLearningRate(network* net, const float f);
 void setGain(network* net, const float f);
+void setLoss(network* net, const loss u);
 void setUnitDropout(network* net, const float f); //Dropout
 void setWeightDropout(network* net, const float f); //Drop Connect
 void setDropoutDecay(network* net, const float f); //Set dropout to silence the unit activation by decay rather than on/off
