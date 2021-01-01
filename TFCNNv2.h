@@ -45,6 +45,7 @@ struct
     uint  activator;
     uint  optimiser;
     uint  batches;
+    uint  loss;
     float rate;
     float gain;
     float dropout;
@@ -164,6 +165,15 @@ enum
 }
 typedef optimiser;
 
+enum 
+{
+    LOSS_ABSOLUTE       = 0,
+    LOSS_SQUARED        = 1,
+    LOSS_MEANSQUARED    = 2,
+    LOSS_CROSSENTROPY   = 3
+}
+typedef loss;
+
 /*
 --------------------------------------
     random functions
@@ -199,6 +209,7 @@ void setActivator(network* net, const activator u);
 void setBatches(network* net, const uint u);
 void setLearningRate(network* net, const float f);
 void setGain(network* net, const float f);
+void setLoss(network* net, const loss u);
 void setUnitDropout(network* net, const float f); //Dropout
 void setWeightDropout(network* net, const float f); //Drop Connect
 void setDropoutDecay(network* net, const float f); //Set dropout to silence the unit activation by decay rather than on/off
@@ -953,6 +964,12 @@ void setGain(network* net, const float f)
     net->gain = f;
 }
 
+void setLoss(network* net, const loss u)
+{
+    if(net == NULL){return;}
+    net->loss = u;
+}
+
 void setUnitDropout(network* net, const float f)
 {
     if(net == NULL){return;}
@@ -1023,6 +1040,7 @@ void randomHyperparameters(network* net)
     net->activator  = uRand(0, 19);
     net->optimiser  = uRand(0, 4);
     net->rate       = uRandFloat(0.001, 0.1);
+    net->loss       = uRand(0, 3);
     net->dropout    = uRandFloat(0, 0.99);
     net->wdropout   = uRandFloat(0, 0.99);
     net->momentum   = uRandFloat(0.01, 0.99);
@@ -1061,6 +1079,7 @@ int createNetwork(network* net, const uint init_weights_type, const uint inputs,
         net->batches    = 3;
         net->rate       = 0.03;
         net->gain       = 1.0;
+        net->loss       = LOSS_ABSOLUTE;
         net->dropout    = 0.3;
         net->wdropout   = 0;
      net->dropout_decay = 0;
