@@ -428,6 +428,14 @@ static inline float tanhDerivative(const float x) //tanh()
     return 1 - (x*x);
 }
 
+float crossEntropy(const float predicted, const float expected) //log loss
+{
+    if(expected == 1)
+        return -log(predicted);
+    else
+        return -log(1 - predicted);
+}
+
 /**********************************************/
 
 static inline float elu(const network* net, const float x)
@@ -1270,7 +1278,14 @@ float processNetwork(network* net, const float* inputs, const learn_type learn)
     float eo = net->max_target;
     if(learn == LEARN_MIN)
         eo = net->min_target;
-    net->error += eo - output;
+    if(net->loss == LOSS_ABSOLUTE)
+        net->error += eo - output;
+    else if(net->loss == LOSS_SQUARED)
+        net->error += pow(eo - output, 2);
+    else if(net->loss == LOSS_MEANSQUARED)
+        net->error += pow(eo - output, 2) * 0.5;
+    else if(net->loss == LOSS_CROSSENTROPY)
+        net->error += crossEntropy(output, eo);
 
     // batching controller
     net->cbatches++;
@@ -1483,6 +1498,9 @@ int saveNetwork(network* net, const char* file)
 
         if(fwrite(&net->batches, 1, sizeof(uint), f) != sizeof(uint))
             return -1;
+        
+        if(fwrite(&net->loss, 1, sizeof(uint), f) != sizeof(uint))
+            return -1;
 
         ///
 
@@ -1595,6 +1613,9 @@ int loadNetwork(network* net, const char* file)
         return -1;
 
     while(fread(&net->batches, 1, sizeof(uint), f) != sizeof(uint))
+        return -1;
+    
+    while(fread(&net->loss, 1, sizeof(uint), f) != sizeof(uint))
         return -1;
 
     ///
