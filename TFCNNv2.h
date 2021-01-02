@@ -27,7 +27,7 @@
     In order to reduce the uint definition to
     unsigned char's just omit the functions for the
     isru and sqnl derivatives by setting them to
-    return 0; With heindsight I should have possibly
+    return 0; In hindsight I should have possibly
     generated these tables in the sub 256 sample range.
 */
 
