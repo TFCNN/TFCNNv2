@@ -23,6 +23,12 @@
     sub 1,000 sample range so one should be fine
     to reduce to unsigned short's without updating
     or omitting the lookup table derivatives.
+    
+    In order to reduce the uint definition to
+    unsigned char's just omit the functions for the
+    isru and sqnl derivatives by setting them to
+    return 0; With heindsight I should have possibly
+    generated these tables in the sub 256 sample range.
 */
 
 #ifndef TFCNN_H
