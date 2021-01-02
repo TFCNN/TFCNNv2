@@ -5,6 +5,18 @@
 --------------------------------------------------
     Tiny Fully Connected Neural Network Library
     https://github.com/tfcnn
+    
+    I am storing enums in uint32's which range in
+    the lower tens of numbers. While it my seem
+    wasteful of memory in the network structure
+    it's not a structure that is expected to have
+    many mutltiple instances. I use uint32 as the
+    defacto minimum storage type for integer values.
+    
+    Although there is nothing stopping anyone from
+    changing that standard in the definition below;
+    "#define uint unsigned int" with the right
+    precautions taken into consideration.
 */
 
 #ifndef TFCNN_H
