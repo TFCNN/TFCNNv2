@@ -17,6 +17,12 @@
     changing that standard in the definition below;
     "#define uint unsigned int" with the right
     precautions taken into consideration.
+    
+    The definition is also used for the lookup
+    table lengths which are all generally in the
+    sub 1,000 sample range so one should be fine
+    to reduce to unsigned short's without updating
+    or omitting the lookup table derivatives.
 */
 
 #ifndef TFCNN_H
@@ -271,7 +277,7 @@ float uRandFloat(const float min, const float max)
     return qRandFloat(min, max);
 #else
     int f = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
-    uint s = 0;
+    unsigned int s = 0;
     ssize_t result = read(f, &s, 4);
     srand(s);
     close(f);
@@ -304,7 +310,7 @@ float uRandWeight(const float min, const float max)
     return qRandWeight(min, max);
 #else
     int f = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
-    uint s = 0;
+    unsigned int s = 0;
     ssize_t result = read(f, &s, 4);
     srand(s);
     close(f);
@@ -338,7 +344,7 @@ uint uRand(const uint min, const uint umax)
     return qRand(min, umax);
 #else
     int f = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
-    uint s = 0;
+    unsigned int s = 0;
     ssize_t result = read(f, &s, 4);
     srand(s);
     close(f);
@@ -375,7 +381,7 @@ float uRandNormal()
     return qRandNormal();
 #else
     int f = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
-    uint s = 0;
+    unsigned int s = 0;
     ssize_t result = read(f, &s, 4);
     srand(s);
     close(f);
