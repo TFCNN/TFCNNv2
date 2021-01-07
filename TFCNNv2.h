@@ -930,7 +930,7 @@ int createPerceptron(ptron* p, const uint weights, const float d, const weight_i
 
     for(uint i = 0; i < p->weights; i++)
     {
-        if(wit < 4)
+        if(wit < 5)
             p->data[i] = qRandWeight(-1, 1) * d; // uniform
         else
             p->data[i] = qRandNormal() * d; // normal
@@ -948,7 +948,7 @@ void resetPerceptron(ptron* p, const float d, const weight_init_type wit)
 {
     for(uint i = 0; i < p->weights; i++)
     {
-        if(wit < 4)
+        if(wit < 5)
             p->data[i] = qRandWeight(-1, 1) * d; // uniform
         else
             p->data[i] = qRandNormal() * d; // normal
