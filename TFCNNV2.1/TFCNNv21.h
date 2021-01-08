@@ -222,7 +222,7 @@ float qRandFloat(const float min, const float max)
         ls = time(0) + 33;
     }
 #endif
-    return ( ( ((float)rand())+1e-7 / (float)RAND_MAX ) * (max-min) ) + min;
+    return ( ( (((float)rand())+1e-7) / (float)RAND_MAX ) * (max-min) ) + min;
 }
 
 float uRandFloat(const float min, const float max)
@@ -231,11 +231,11 @@ float uRandFloat(const float min, const float max)
     return qRandFloat(min, max);
 #else
     int f = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
-    uint s = 0;
+    unsigned int s = 0;
     ssize_t result = read(f, &s, 4);
     srand(s);
     close(f);
-    return ( ( ((float)rand())+1e-7 / (float)RAND_MAX ) * (max-min) ) + min;
+    return ( ( (((float)rand())+1e-7) / (float)RAND_MAX ) * (max-min) ) + min;
 #endif
 }
 
@@ -252,7 +252,7 @@ float qRandWeight(const float min, const float max)
     float pr = 0;
     while(pr == 0) //never return 0
     {
-        const float rv2 = ( ( ((float)rand())+1e-7 / (float)RAND_MAX ) * (max-min) ) + min;
+        const float rv2 = ( ( (((float)rand())+1e-7) / (float)RAND_MAX ) * (max-min) ) + min;
         pr = roundf(rv2 * 100) / 100; // two decimals of precision
     }
     return pr;
@@ -264,14 +264,14 @@ float uRandWeight(const float min, const float max)
     return qRandWeight(min, max);
 #else
     int f = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
-    uint s = 0;
+    unsigned int s = 0;
     ssize_t result = read(f, &s, 4);
     srand(s);
     close(f);
     float pr = 0;
     while(pr == 0) //never return 0
     {
-        const float rv2 = ( ( ((float)rand())+1e-7 / (float)RAND_MAX ) * (max-min) ) + min;
+        const float rv2 = ( ( (((float)rand())+1e-7) / (float)RAND_MAX ) * (max-min) ) + min;
         pr = roundf(rv2 * 100) / 100; // two decimals of precision
     }
     return pr;
@@ -289,7 +289,7 @@ uint qRand(const uint min, const uint umax)
     }
 #endif
     const uint max = umax + 1;
-    return ( ( ((float)rand())+1e-7 / (float)RAND_MAX ) * (max-min) ) + min;
+    return ( ( (((float)rand())+1e-7) / (float)RAND_MAX ) * (max-min) ) + min;
 }
 
 uint uRand(const uint min, const uint umax)
@@ -298,12 +298,12 @@ uint uRand(const uint min, const uint umax)
     return qRand(min, umax);
 #else
     int f = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
-    uint s = 0;
+    unsigned int s = 0;
     ssize_t result = read(f, &s, 4);
     srand(s);
     close(f);
     const uint max = umax + 1;
-    return ( ( ((float)rand())+1e-7 / (float)RAND_MAX ) * (max-min) ) + min;
+    return ( ( (((float)rand())+1e-7) / (float)RAND_MAX ) * (max-min) ) + min;
 #endif
 }
 
@@ -317,13 +317,13 @@ float qRandNormal() // Box Muller
         ls = time(0) + 33;
     }
 #endif
-    double u = ( ((float)rand())+1e-7 / (float)RAND_MAX) * 2 - 1;
-    double v = ( ((float)rand())+1e-7 / (float)RAND_MAX) * 2 - 1;
+    double u = ( (((float)rand())+1e-7) / (float)RAND_MAX) * 2 - 1;
+    double v = ( (((float)rand())+1e-7) / (float)RAND_MAX) * 2 - 1;
     double r = u * u + v * v;
     while(r == 0 || r > 1)
     {
-        u = ( ((float)rand())+1e-7 / (float)RAND_MAX) * 2 - 1;
-        v = ( ((float)rand())+1e-7 / (float)RAND_MAX) * 2 - 1;
+        u = ( (((float)rand())+1e-7) / (float)RAND_MAX) * 2 - 1;
+        v = ( (((float)rand())+1e-7) / (float)RAND_MAX) * 2 - 1;
         r = u * u + v * v;
     }
     return u * sqrt(-2 * log(r) / r);
@@ -335,17 +335,17 @@ float uRandNormal()
     return qRandNormal();
 #else
     int f = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
-    uint s = 0;
+    unsigned int s = 0;
     ssize_t result = read(f, &s, 4);
     srand(s);
     close(f);
-    double u = ( ((float)rand())+1e-7 / (float)RAND_MAX) * 2 - 1;
-    double v = ( ((float)rand())+1e-7 / (float)RAND_MAX) * 2 - 1;
+    double u = ( (((float)rand())+1e-7) / (float)RAND_MAX) * 2 - 1;
+    double v = ( (((float)rand())+1e-7) / (float)RAND_MAX) * 2 - 1;
     double r = u * u + v * v;
     while(r == 0 || r > 1)
     {
-        u = ( ((float)rand())+1e-7 / (float)RAND_MAX) * 2 - 1;
-        v = ( ((float)rand())+1e-7 / (float)RAND_MAX) * 2 - 1;
+        u = ( (((float)rand())+1e-7) / (float)RAND_MAX) * 2 - 1;
+        v = ( (((float)rand())+1e-7) / (float)RAND_MAX) * 2 - 1;
         r = u * u + v * v;
     }
     return u * sqrt(-2 * log(r) / r);
