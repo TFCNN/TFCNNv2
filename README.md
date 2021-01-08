@@ -4,6 +4,7 @@ _`TFCNNv2` and all variants are targeted at Linux / Unix / BSD platforms; for a 
 `[09/11/20]` - Added [`TFCNNv21.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNV2.1) for more accurate computations of `SELU, GELU, MISH, SQNL` and `SINC`.
 <br>`[11/11/20]` - Added [`TFCNNv2_softmax.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2_softmax.h) for multiple classification using a softmax layer with cross-entropy loss.
 <br>`[12/11/20]` - Added [`TFCNNv2_multiclass.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2_multiclass.h) for regular multiple classification on the same network, absolute loss.
+<br>`[23/11/20]` - Added HE initialisation as `WEIGHT_INIT_UNIFORM_RELU` and `WEIGHT_INIT_NORMAL_RELU`.
 <br>`[01/01/21]` - Added loss functions to [`TFCNNv2.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2.h) and ability to change the uint defitionion to smaller storage types.
 <br>`[08/01/21]` - Random functions broken on `12/12/20` flawed quick fix on `23/12/20` now finally corrected.
 
