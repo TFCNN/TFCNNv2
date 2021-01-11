@@ -1490,99 +1490,186 @@ int saveNetwork(network* net, const char* file)
     if(f != NULL)
     {
         if(flock(fileno(f), LOCK_EX) == -1)
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->num_layerunits, 1, sizeof(uint), f) != sizeof(uint))
+        {
+            fclose(f);
             return -1;
+        }
         
         if(fwrite(&net->num_inputs, 1, sizeof(uint), f) != sizeof(uint))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->num_outputs, 1, sizeof(uint), f) != sizeof(uint))
+        {
+            fclose(f);
             return -1;
+        }
         
         if(fwrite(&net->num_layers, 1, sizeof(uint), f) != sizeof(uint))
+        {
+            fclose(f);
             return -1;
+        }
         
         if(fwrite(&net->init, 1, sizeof(uint), f) != sizeof(uint))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->activator, 1, sizeof(uint), f) != sizeof(uint))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->optimiser, 1, sizeof(uint), f) != sizeof(uint))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->batches, 1, sizeof(uint), f) != sizeof(uint))
+        {
+            fclose(f);
             return -1;
+        }
 
         ///
 
         if(fwrite(&net->rate, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->gain, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->dropout, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->wdropout, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
         
         if(fwrite(&net->dropout_decay, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->momentum, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->rmsalpha, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->elualpha, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
         
         if(fwrite(&net->epsilon, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->min_target, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->max_target, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         for(int i = 0; i < net->num_layers-1; i++)
         {
             for(int j = 0; j < net->num_layerunits; j++)
             {
                 if(fwrite(&net->layer[i][j].data[0], 1, net->layer[i][j].weights*sizeof(float), f) != net->layer[i][j].weights*sizeof(float))
+                {
+                    fclose(f);
                     return -1;
+                }
                 
                 if(fwrite(&net->layer[i][j].momentum[0], 1, net->layer[i][j].weights*sizeof(float), f) != net->layer[i][j].weights*sizeof(float))
+                {
+                    fclose(f);
                     return -1;
+                }
 
                 if(fwrite(&net->layer[i][j].bias, 1, sizeof(float), f) != sizeof(float))
+                {
+                    fclose(f);
                     return -1;
+                }
                 
                 if(fwrite(&net->layer[i][j].bias_momentum, 1, sizeof(float), f) != sizeof(float))
+                {
+                    fclose(f);
                     return -1;
+                }
             }
         }
 
         if(fwrite(&net->layer[net->num_layers-1][0].data[0], 1, net->layer[net->num_layers-1][0].weights*sizeof(float), f) != net->layer[net->num_layers-1][0].weights*sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
         
         if(fwrite(&net->layer[net->num_layers-1][0].momentum[0], 1, net->layer[net->num_layers-1][0].weights*sizeof(float), f) != net->layer[net->num_layers-1][0].weights*sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(fwrite(&net->layer[net->num_layers-1][0].bias, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
         
         if(fwrite(&net->layer[net->num_layers-1][0].bias_momentum, 1, sizeof(float), f) != sizeof(float))
+        {
+            fclose(f);
             return -1;
+        }
 
         if(flock(fileno(f), LOCK_UN) == -1)
+        {
+            fclose(f);
             return -1;
+        }
 
         fclose(f);
     }
