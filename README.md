@@ -7,6 +7,7 @@ _`TFCNNv2` and all variants are targeted at Linux / Unix / BSD platforms; for a 
 <br>`[23/11/20]` - Added HE initialisation as `WEIGHT_INIT_UNIFORM_RELU` and `WEIGHT_INIT_NORMAL_RELU`.
 <br>`[01/01/21]` - Added loss functions to [`TFCNNv2.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2.h) and ability to change the uint defitionion to smaller storage types.
 <br>`[08/01/21]` - Random functions broken on `12/12/20` flawed quick fix on `23/12/20` now finally corrected.
+<br>`[11/01/21]` - Fixed file handle leak on `fwrite/fread` failure in save/load network functions.
 
 **Notice:** you cannot share `saveNetwork()` files between versions, each version saves a different format of the `saveNetwork()` file.
 
