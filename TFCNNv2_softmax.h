@@ -1628,64 +1628,121 @@ int loadNetwork(network* net, const char* file)
 
     ///
 
-    while(fread(&net->num_layerunits, 1, sizeof(uint), f) != sizeof(uint))
+    if(fread(&net->num_layerunits, 1, sizeof(uint), f) != sizeof(uint))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->num_inputs, 1, sizeof(uint), f) != sizeof(uint))
+    if(fread(&net->num_inputs, 1, sizeof(uint), f) != sizeof(uint))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->num_outputs, 1, sizeof(uint), f) != sizeof(uint))
+    if(fread(&net->num_outputs, 1, sizeof(uint), f) != sizeof(uint))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->num_layers, 1, sizeof(uint), f) != sizeof(uint))
+    if(fread(&net->num_layers, 1, sizeof(uint), f) != sizeof(uint))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->init, 1, sizeof(uint), f) != sizeof(uint))
+    if(fread(&net->init, 1, sizeof(uint), f) != sizeof(uint))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->activator, 1, sizeof(uint), f) != sizeof(uint))
+    if(fread(&net->activator, 1, sizeof(uint), f) != sizeof(uint))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->optimiser, 1, sizeof(uint), f) != sizeof(uint))
+    if(fread(&net->optimiser, 1, sizeof(uint), f) != sizeof(uint))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->batches, 1, sizeof(uint), f) != sizeof(uint))
+    if(fread(&net->batches, 1, sizeof(uint), f) != sizeof(uint))
+    {
+        fclose(f);
         return -1;
+    }
 
     ///
 
-    while(fread(&net->rate, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->rate, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->gain, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->gain, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->dropout, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->dropout, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->wdropout, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->wdropout, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->dropout_decay, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->dropout_decay, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->momentum, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->momentum, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->rmsalpha, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->rmsalpha, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->elualpha, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->elualpha, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
     
-    while(fread(&net->epsilon, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->epsilon, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->min_target, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->min_target, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->max_target, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->max_target, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
     ///
 
@@ -1697,33 +1754,57 @@ int loadNetwork(network* net, const char* file)
     {
         for(int j = 0; j < net->num_layerunits; j++)
         {
-            while(fread(&net->layer[i][j].data[0], 1, net->layer[i][j].weights*sizeof(float), f) != net->layer[i][j].weights*sizeof(float))
+            if(fread(&net->layer[i][j].data[0], 1, net->layer[i][j].weights*sizeof(float), f) != net->layer[i][j].weights*sizeof(float))
+            {
+                fclose(f);
                 return -1;
+            }
 
-            while(fread(&net->layer[i][j].momentum[0], 1, net->layer[i][j].weights*sizeof(float), f) != net->layer[i][j].weights*sizeof(float))
+            if(fread(&net->layer[i][j].momentum[0], 1, net->layer[i][j].weights*sizeof(float), f) != net->layer[i][j].weights*sizeof(float))
+            {
+                fclose(f);
                 return -1;
+            }
 
-            while(fread(&net->layer[i][j].bias, 1, sizeof(float), f) != sizeof(float))
+            if(fread(&net->layer[i][j].bias, 1, sizeof(float), f) != sizeof(float))
+            {
+                fclose(f);
                 return -1;
+            }
 
-            while(fread(&net->layer[i][j].bias_momentum, 1, sizeof(float), f) != sizeof(float))
+            if(fread(&net->layer[i][j].bias_momentum, 1, sizeof(float), f) != sizeof(float))
+            {
+                fclose(f);
                 return -1;
+            }
         }
     }
 
     ///
 
-    while(fread(&net->layer[net->num_layers-1][0].data[0], 1, net->layer[net->num_layers-1][0].weights*sizeof(float), f) != net->layer[net->num_layers-1][0].weights*sizeof(float))
+    if(fread(&net->layer[net->num_layers-1][0].data[0], 1, net->layer[net->num_layers-1][0].weights*sizeof(float), f) != net->layer[net->num_layers-1][0].weights*sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->layer[net->num_layers-1][0].momentum[0], 1, net->layer[net->num_layers-1][0].weights*sizeof(float), f) != net->layer[net->num_layers-1][0].weights*sizeof(float))
+    if(fread(&net->layer[net->num_layers-1][0].momentum[0], 1, net->layer[net->num_layers-1][0].weights*sizeof(float), f) != net->layer[net->num_layers-1][0].weights*sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->layer[net->num_layers-1][0].bias, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->layer[net->num_layers-1][0].bias, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
-    while(fread(&net->layer[net->num_layers-1][0].bias_momentum, 1, sizeof(float), f) != sizeof(float))
+    if(fread(&net->layer[net->num_layers-1][0].bias_momentum, 1, sizeof(float), f) != sizeof(float))
+    {
+        fclose(f);
         return -1;
+    }
 
     ///
 
