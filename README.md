@@ -21,6 +21,7 @@ void  resetNetwork(network* net);
 void  destroyNetwork(network* net);
 int   saveNetwork(network* net, const char* file);
 int   loadNetwork(network* net, const char* file);
+void  exportLayers(network* net, const char* file);
 
 // accessors
 void setWeightInit(network* net, const weight_init_type u);
