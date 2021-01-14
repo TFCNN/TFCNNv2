@@ -273,7 +273,7 @@ void exportLayers(network* net, const char* file)
                 for(int k = 0; k < net->layer[i][j].weights; k++)
                     fprintf(f, "%.2f ", net->layer[i][j].data[k]);
                 
-                fprintf(f, ":: %.2f\n", net->layer[i][j].bias);
+                fprintf(f, ":: %f\n", net->layer[i][j].bias);
             }
 
             fprintf(f, "OUT: ");
@@ -287,7 +287,7 @@ void exportLayers(network* net, const char* file)
         for(int i = 0; i < net->layer[net->num_layers-1][0].weights; i++)
             fprintf(f, "%.2f ", net->layer[net->num_layers-1][0].data[i]);
 
-        fprintf(f, ":: %.2f\n", net->layer[net->num_layers-1][0].bias);
+        fprintf(f, ":: %f\n", net->layer[net->num_layers-1][0].bias);
         fprintf(f, "OUT: %f\n", net->foutput);
 
         fclose(f);
