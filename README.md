@@ -8,6 +8,7 @@ _`TFCNNv2` and all variants are targeted at Linux / Unix / BSD platforms; for a 
 <br>`[01/01/21]` - Added loss functions to [`TFCNNv2.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2.h) and ability to change the uint definition to smaller storage types.
 <br>`[08/01/21]` - Random functions broken on `12/12/20` flawed quick fix on `23/12/20` now finally corrected.
 <br>`[11/01/21]` - Fixed file handle leak on `fwrite/fread` failure in save/load network functions.
+<br>`[14/01/21]` - Added new function to [`TFCNNv2.h`](https://github.com/TFCNN/TFCNNv2/blob/main/TFCNNv2.h) `exportLayers(network* net, const char* file)`.
 
 **Notice:** you cannot share `saveNetwork()` files between versions, each version saves a different format of the `saveNetwork()` file.
 
