@@ -258,6 +258,42 @@ void destroyNetwork(network* net);
 int saveNetwork(network* net, const char* file);
 int loadNetwork(network* net, const char* file);
 
+void exportLayers(network* net, const char* file)
+{
+    // layer weights
+    FILE* f = fopen(file, "w");
+    if(f != NULL)
+    {
+        for(int i = 1; i < net->num_layers-1; i++)
+        {
+            fprintf(f, "~~~~~~~~~~~~~~~~L(%i):\n", i);
+            for(int j = 0; j < net->num_layerunits; j++)
+            {
+                fprintf(f, "U(%i): ", j);
+                for(int k = 0; k < net->layer[i][j].weights; k++)
+                    fprintf(f, "%.2f ", net->layer[i][j].data[k]);
+                
+                fprintf(f, ":: %.2f\n", net->layer[i][j].bias);
+            }
+
+            fprintf(f, "OUT: ");
+            for(int j = 0; j < net->num_layerunits; j++)
+                fprintf(f, "%.2f ", net->output[i][j]);
+            fprintf(f, "\n");
+        }
+
+        fprintf(f, "~~~~~~~~~~~~~~~~L(%i) FINAL:\n", net->num_layers-1);
+        fprintf(f, "U(0): ");
+        for(int i = 0; i < net->layer[net->num_layers-1][0].weights; i++)
+            fprintf(f, "%.2f ", net->layer[net->num_layers-1][0].data[i]);
+
+        fprintf(f, ":: %.2f\n", net->layer[net->num_layers-1][0].bias);
+        fprintf(f, "OUT: %f\n", net->foutput);
+
+        fclose(f);
+    }
+}
+
 /*
 --------------------------------------
     the code ...
