@@ -1348,7 +1348,7 @@ float processNetwork(network* net, const float* inputs, const learn_type learn)
     else if(net->loss == LOSS_MEANSQUARED)
         net->error += pow(eo - output, 2) * 0.5;
     else if(net->loss == LOSS_CROSSENTROPY)
-        net->error += crossEntropy(output, eo);
+        net->error += (eo - output) * crossEntropy(output, eo);
 
     // batching controller
     net->cbatches++;
